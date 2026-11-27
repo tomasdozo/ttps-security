@@ -11,18 +11,18 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "API de ejemplo de seguridad y JWT", version = "1.0",
-    description = """
-        Usuarios de ejemplo (contraseña: `1234`):
-
-        - `lector@ejemplo.com`: `FOOD_READ`.
-        - `editor@ejemplo.com`: `FOOD_READ`, `FOOD_WRITE`.
-        - `admin@ejemplo.com`: `FOOD_READ`, `FOOD_WRITE`, `ROLE_ADMIN`.
-
-        Estas credenciales son únicamente para el ejemplo y no deben usarse en producción.
-        """))
+        description = """
+                Usuarios de ejemplo (contraseña: `1234`):
+                
+                - `lector@ejemplo.com`: `FOOD_READ`.
+                - `editor@ejemplo.com`: `FOOD_READ`, `FOOD_WRITE`.
+                - `admin@ejemplo.com`: `FOOD_READ`, `FOOD_WRITE`, `ROLE_ADMIN`.
+                
+                Estas credenciales son únicamente para el ejemplo y no deben usarse en producción.
+                """))
 @SecurityScheme(name = OpenApiConfig.BEARER_AUTH, type = SecuritySchemeType.HTTP,
-    scheme = "bearer", bearerFormat = "JWT")
+        scheme = "bearer", bearerFormat = "JWT")
 public class OpenApiConfig {
 
-  public static final String BEARER_AUTH = "bearerAuth";
+    public static final String BEARER_AUTH = "bearerAuth";
 }

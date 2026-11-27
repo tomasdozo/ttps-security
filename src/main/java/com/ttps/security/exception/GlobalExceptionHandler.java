@@ -18,28 +18,28 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler({BadCredentialsException.class, AccountStatusException.class})
-  public ResponseEntity<ErrorResponse> handleInvalidCredentials() {
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-        .body(new ErrorResponse("Credenciales inválidas"));
-  }
+    @ExceptionHandler({BadCredentialsException.class, AccountStatusException.class})
+    public ResponseEntity<ErrorResponse> handleInvalidCredentials() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse("Credenciales inválidas"));
+    }
 
-  @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class,
-      MethodArgumentTypeMismatchException.class})
-  public ResponseEntity<ErrorResponse> handleInvalidRequest() {
-    return ResponseEntity.badRequest()
-        .body(new ErrorResponse("La petición es inválida"));
-  }
+    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class,
+            MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<ErrorResponse> handleInvalidRequest() {
+        return ResponseEntity.badRequest()
+                .body(new ErrorResponse("La petición es inválida"));
+    }
 
-  @ExceptionHandler(AccessDeniedException.class)
-  public ResponseEntity<ErrorResponse> handleAccessDenied() {
-    return ResponseEntity.status(HttpStatus.FORBIDDEN)
-        .body(new ErrorResponse("Acceso denegado"));
-  }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse("Acceso denegado"));
+    }
 
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorResponse> handleNotExpectedRequest() {
-    return ResponseEntity.internalServerError()
-        .body(new ErrorResponse("Hubo un error inesperado"));
-  }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleNotExpectedRequest() {
+        return ResponseEntity.internalServerError()
+                .body(new ErrorResponse("Hubo un error inesperado"));
+    }
 }

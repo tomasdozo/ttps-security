@@ -1,7 +1,7 @@
 package com.ttps.security.security;
 
-import com.ttps.security.service.UserDetailsServiceImpl;
 import com.ttps.security.service.JwtService;
+import com.ttps.security.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,44 +22,44 @@ import tools.jackson.databind.json.JsonMapper;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-  private static final String[] PUBLIC_ENDPOINTS = {"/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml",
-      "/swagger-ui.html", "/swagger-ui/**", "/actuator", "/actuator/**"};
+    private static final String[] PUBLIC_ENDPOINTS = {"/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml",
+            "/swagger-ui.html", "/swagger-ui/**", "/actuator", "/actuator/**"};
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Bean
-  public AuthenticationManager authenticationManager(
-      UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder) {
-    DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-    provider.setPasswordEncoder(passwordEncoder);
-    return new ProviderManager(provider);
-  }
+    @Bean
+    public AuthenticationManager authenticationManager(
+            UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(provider);
+    }
 
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtService jwtService,
-      UserDetailsServiceImpl userDetailsService, JsonMapper jsonMapper) {
-    return http
-        // Deshabilita CSRF porque la API no usa cookies para autenticar solicitudes.
-        .csrf(AbstractHttpConfigurer::disable)
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtService jwtService,
+                                                   UserDetailsServiceImpl userDetailsService, JsonMapper jsonMapper) {
+        return http
+                // Deshabilita CSRF porque la API no usa cookies para autenticar solicitudes.
+                .csrf(AbstractHttpConfigurer::disable)
 
-        // Evita la creación de sesiones en el servidor.
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Evita la creación de sesiones en el servidor.
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-        // Deshabilita CORS; en producción se deben configurar los orígenes permitidos del frontend.
-        .cors(AbstractHttpConfigurer::disable)
+                // Deshabilita CORS; en producción se deben configurar los orígenes permitidos del frontend.
+                .cors(AbstractHttpConfigurer::disable)
 
-        // Define qué endpoints son públicos y exige autenticación para el resto.
-        .authorizeHttpRequests(authorization -> authorization
-            .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-            .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-            .anyRequest().authenticated())
+                // Define qué endpoints son públicos y exige autenticación para el resto.
+                .authorizeHttpRequests(authorization -> authorization
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .anyRequest().authenticated())
 
-        // Agrega el filtro JWT antes del de autenticación por usuario y contraseña.
-        .addFilterBefore(new JwtAuthenticationFilter(jwtService, userDetailsService, jsonMapper),
-            UsernamePasswordAuthenticationFilter.class)
-        .build();
-  }
+                // Agrega el filtro JWT antes del de autenticación por usuario y contraseña.
+                .addFilterBefore(new JwtAuthenticationFilter(jwtService, userDetailsService, jsonMapper),
+                        UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
 }

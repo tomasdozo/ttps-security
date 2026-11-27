@@ -14,14 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthService {
 
-  private final AuthenticationManager authenticationManager;
-  private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-  @Transactional(readOnly = true)
-  public LoginResponse login(LoginRequest request) {
-    Authentication authentication = authenticationManager.authenticate(
-        UsernamePasswordAuthenticationToken.unauthenticated(request.email(), request.password()));
-    SecurityUser principal = (SecurityUser) authentication.getPrincipal();
-    return new LoginResponse(jwtService.createToken(principal));
-  }
+    @Transactional(readOnly = true)
+    public LoginResponse login(LoginRequest request) {
+        Authentication authentication = authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken.unauthenticated(request.email(), request.password()));
+        SecurityUser principal = (SecurityUser) authentication.getPrincipal();
+        return new LoginResponse(jwtService.createToken(principal));
+    }
 }
