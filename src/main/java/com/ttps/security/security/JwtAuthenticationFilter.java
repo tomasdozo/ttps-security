@@ -62,8 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Crea el contexto de seguridad con el usuario autenticado y continúa la cadena de filtros.
         SecurityUser principal = user.get();
-        var authentication = UsernamePasswordAuthenticationToken.authenticated(
-                principal, null, principal.getAuthorities());
+        var authentication = UsernamePasswordAuthenticationToken.authenticated(principal, null, principal.getAuthorities());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
