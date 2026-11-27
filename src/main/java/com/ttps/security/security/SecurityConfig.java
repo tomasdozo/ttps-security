@@ -42,13 +42,22 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtService jwtService,
       UserDetailsServiceImpl userDetailsService, JsonMapper jsonMapper) {
     return http
-        // Esta API no usa sesiones ni autenticación mediante cookies por lo cual se deshabilita CSRF.
+        // Deshabilita CSRF porque la API no usa cookies para autenticar solicitudes.
         .csrf(AbstractHttpConfigurer::disable)
+
+        // Evita la creación de sesiones en el servidor.
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+        // Deshabilita CORS; en producción se deben configurar los orígenes permitidos del frontend.
+        .cors(AbstractHttpConfigurer::disable)
+
+        // Define qué endpoints son públicos y exige autenticación para el resto.
         .authorizeHttpRequests(authorization -> authorization
             .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
             .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
             .anyRequest().authenticated())
+
+        // Agrega el filtro JWT antes del de autenticación por usuario y contraseña.
         .addFilterBefore(new JwtAuthenticationFilter(jwtService, userDetailsService, jsonMapper),
             UsernamePasswordAuthenticationFilter.class)
         .build();

@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Busca usuarios por email para la autenticación de Spring Security.
- * Implementa la interfaz UserDetailsService, que es utilizada por Spring Security para cargar los detalles del usuario durante el proceso de autenticación.
+ * Busca usuarios por correo electrónico para la autenticación de Spring Security.
+ * Implementa UserDetailsService, que Spring Security utiliza para obtener los datos del usuario durante la autenticación.
  */
 @Service
 @RequiredArgsConstructor

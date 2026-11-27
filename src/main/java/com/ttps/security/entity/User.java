@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * El usuario estandar de la aplicacion. No lleva ningun agregado de Spring Security.
+ * Representa un usuario de la aplicación, independiente de Spring Security.
  */
 @Data
 @Entity
@@ -27,11 +27,11 @@ public class User {
   @Column(nullable = false, unique = true)
   private String email;
 
-  // La contraseña encriptada.
+  // Contraseña almacenada como hash.
   @Column(nullable = false)
   private String password;
 
-  // Cada usuario tiene un set de permisos y/o roles.
+  // Permisos y roles asignados al usuario.
   @Column(nullable = false)
   private Set<Permission> permissions;
 

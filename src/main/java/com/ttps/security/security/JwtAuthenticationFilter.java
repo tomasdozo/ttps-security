@@ -23,7 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import tools.jackson.databind.json.JsonMapper;
 
 /**
- * Autentica peticiones con un JWT Bearer válido y un usuario existente.
+ * Autentica solicitudes con un JWT válido y un usuario existente.
  */
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -37,13 +37,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                   @NonNull FilterChain filterChain) throws ServletException, IOException {
     String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-    // Si no hay un encabezado de autorización o no es un Bearer token, se pasa al siguiente filtro.
+    // Si falta el encabezado de autorización o no usa el esquema Bearer, continúa con el siguiente filtro.
     if (authorization == null || !authorization.regionMatches(true, 0, "Bearer ", 0, 7)) {
       filterChain.doFilter(request, response);
       return;
     }
 
-    // Se valida el token y se obtiene el UUID del usuario. Si el token es inválido, se rechaza la autenticación.
+    // Valida el token y obtiene el UUID del usuario; si no es válido, rechaza la autenticación.
     UUID id;
     try {
       id = jwtService.validateToken(authorization.substring(7));
@@ -52,14 +52,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       return;
     }
 
-    // Se busca el usuario por UUID. Si no existe, se rechaza la autenticación.
+    // Busca al usuario por UUID; si no existe, rechaza la autenticación.
     var user = userDetailsService.findById(id);
     if (user.isEmpty()) {
       rejectAuthentication(response);
       return;
     }
 
-    // Se crea un contexto de seguridad con el usuario autenticado y se continúa con la cadena de filtros.
+    // Crea el contexto de seguridad con el usuario autenticado y continúa la cadena de filtros.
     SecurityUser principal = user.get();
     var authentication = UsernamePasswordAuthenticationToken.authenticated(
         principal, null, principal.getAuthorities());

@@ -68,8 +68,8 @@ public class JwtService {
   }
 
   /**
-   * Verifica la firma y la expiración y devuelve el UUID del sujeto.
-   * Lanza JwtException si el token no es válido.
+   * Verifica la firma y la expiración del token y devuelve el UUID del sujeto.
+   * Lanza JwtException cuando el token no es válido.
    */
   public UUID validateToken(String token) {
     if (token == null || token.isBlank()) {
